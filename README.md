@@ -1,63 +1,30 @@
-# Avaliação Sprints 9 e 10 - Projeto Final - Programa de Bolsas Compass UOL / AWS - turma junho/2024
+## Aplicativo de Monitoramento de Focos de Dengue usando AWS
+ 
+## Proposta do Projeto:
+ 
+**Descrição**: Um sistema que utiliza inteligência artificial para identificar e monitorar focos de dengue em áreas urbanas por meio da análise de imagens enviadas por usuários. A aplicação visa analisar imagens de locais públicos e privados, como quintais ou terrenos baldios, identificando possíveis focos de água parada onde os mosquitos se reproduzem. Além disso, um chatbot integrado fornecerá orientações preventivas e instruções sobre como eliminar esses focos, ajudando a população a adotar práticas de combate à dengue.
 
-Avaliação final do programa de bolsas Compass UOL para formação em machine learning para AWS.
+**Escopo Inicial**: Esta versão do projeto é focada no desenvolvimento de um protótipo funcional para a coleta e análise de dados, utilizando ferramentas AWS para processar imagens e interagir com os usuários por meio de um chatbot.
 
----
+**Impacto e Apelo Social**: A solução busca reduzir a propagação da dengue, uma doença que afeta milhares de pessoas em regiões tropicais. Ao identificar áreas com possíveis focos de mosquito, o sistema contribui para prevenir surtos e promove campanhas de conscientização. O projeto incentiva a colaboração com universidades e organizações públicas, alinhando-se ao objetivo de melhorar a saúde e o bem-estar da população.
 
-## Execução
+## Tecnologias Pretendidas: 
 
-Deverá ser produzido um projeto final para apresentação pública até o último dia deste Programa de Bolsas.
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=ffffff)
+![AWS Lambda](https://img.shields.io/badge/AWS%20Lambda-7686F5?style=for-the-badge&logo=amazon-aws&logoColor=ffffff)
+![AWS Lex](https://img.shields.io/badge/AWS%20Lex-3BB143?style=for-the-badge&logo=amazon-aws&logoColor=ffffff)
+![AWS Rekognition](https://img.shields.io/badge/AWS%20Rekognition-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=ffffff)
+![AWS Polly](https://img.shields.io/badge/AWS%20Polly-FF4F3D?style=for-the-badge&logo=amazon-aws&logoColor=ffffff)
+![AWS Bedrock](https://img.shields.io/badge/AWS%20Bedrock-00BFFF?style=for-the-badge&logo=amazon-aws&logoColor=ffffff)
+![AWS DynamoDB](https://img.shields.io/badge/AWS%20DynamoDB-4053D6?style=for-the-badge&logo=amazon-aws&logoColor=ffffff)
+![AWS SageMaker](https://img.shields.io/badge/AWS%20SageMaker-F4C300?style=for-the-badge&logo=amazon-aws&logoColor=ffffff)
+![AWS S3](https://img.shields.io/badge/AWS%20S3-569A31?style=for-the-badge&logo=amazon-aws&logoColor=ffffff)
 
-**Especificações**:
+## Arquitetura do Projeto:
 
-A equipe devevá:
+<img src="./assets/ARQUITETURA_GRUPO-2.png" alt="imagem de exemplo - arquitetura do projeto" width="500" />
+ 
+ ## Responsáveis pelo desenvolvimento:
 
-1 - Escolher uma aplicação prática para implementação e definir a arquitetura preliminar AWS até 18/10/2024;
-
-2 - A aplicação deverá contemplar, no mínimo, as seguintes ferramentas AWS:
-
-- Transcribe e/ou Polly;
-- Rekognition;
-- Bedrock;
-- Lex;
-  
-3 - O canal do chatbot Lex deverá ser de uso público e permitir o envio de som e imagem.
-
-Dicas: procurem implementar uma aplicação de apelo social e, neste sentido, busquem contatos com organizações públicas (universidades, associações, etc.).
-
-***
-
-## O que será avaliado
-
-- Praticidade de utilização;
-- Eficácia da aplicação;
-- Uso racional da arquitetura AWS;
-- Projeto em produção na AWS;
-- Códigos utilizados na implementação da arquitetura;
-- Prompt utilizado no Bedrock;
-- Se usado o modelo para treinamento/reconhecimento:
-  - Divisão dos dados para treino e teste, se utilizado treinamento;
-  - Taxa de assertividade aceitável (se o modelo está classificando corretamente);
-  - Entendimento da equipe sobre o modelo utilizado (saber explicar o que foi feito);
-  - Mostrar resposta do modelo para classificação;
-- Organização geral do código fonte:
-  - Estrutura de pastas;
-  - Divisão de responsabilidades em arquivos/pastas distintos;
-  - Otimização do código fonte (evitar duplicações de código);
-- Objetividade do README.md.
-
-***
-
-## Entrega
-
-- **O trabalho deve ser feito em grupos entre cinco e seis pessoas cada, que serão distribuídos em reunião dia 14/10/2024**;
-- Criar uma branch no repositório com o formato grupo-número (Exemplo: grupo-1);
-- **O tema do trabalho e o esboço da arquitetura deverão estar publicados no github até dia 18/10/2024**;
-- **O grupo deverá fazer uma apresentação de protótipo (prova de conceito - PoC) em ensaio preliminar entre os dias 11/11/2024 e 25/11/2024**;
-- Subir o trabalho na branch com um README.md:
-  - documentar detalhes sobre como a avaliação foi desenvolvida;
-  - dificuldades conhecidas;
-  - como utilizar o sistema;
-  - 🔨 código fonte desenvolvido (observar estruturas de pastas);
-- **Cada grupo deverá fazer uma apresentação do trabalho completo desenvolvido no dia 25/11/2024**;
-- **O prazo de entrega é até às 09h do dia 27/11/2024 no repositório do github** (https://github.com/Compass-pb-aws-2024-JUNHO/sprints-9-10-pb-aws-junho).
+ | [<img loading="lazy" src="https://avatars.githubusercontent.com/u/109036881?v=4" width=115><br><sub>Alexander Júnior</sub>](https://github.com/alexanderjr02) |  [<img loading="lazy" src="https://avatars.githubusercontent.com/u/64118446?v=4" width=115><br><sub>Gerson Ramos</sub>](https://github.com/gersonlramos) |  [<img loading="lazy" src="https://avatars.githubusercontent.com/u/173846137?v=4" width=115><br><sub>Jeff Carneiro</sub>](https://github.com/j3ffcarneiro) |  [<img loading="lazy" src="https://avatars.githubusercontent.com/u/173844938?v=4" width=115><br><sub>Lizandra Resende</sub>](https://github.com/ResendeLiz) | [<img loading="lazy" src="https://avatars.githubusercontent.com/u/101699095?v=4" width=115><br><sub>Nathalia Reis</sub>](https://github.com/NathaliaOSReis)
+| :---: | :---: | :---: | :---: | :---: |
