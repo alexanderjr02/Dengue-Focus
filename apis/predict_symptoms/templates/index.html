@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Inference</title>
+</head>
+<body>
+    <h1>Model Inference</h1>
+    <form id="inference-form">
+        <label for="febre">FEBRE:</label>
+        <input type="number" id="febre" name="febre" required><br><br>
+        
+        <label for="dor_corpo">DOR_CORPO:</label>
+        <input type="number" id="dor_corpo" name="dor_corpo" required><br><br>
+        
+        <label for="dor_cabeca">CEFALEIA:</label>
+        <input type="number" id="dor_cabeca" name="dor_cabeca" required><br><br>
+        
+        <label for="erupcao">EXANTEMA:</label>
+        <input type="number" id="erupcao" name="erupcao" required><br><br>
+        
+        <label for="vomito">VOMITO:</label>
+        <input type="number" id="vomito" name="vomito" required><br><br>
+        
+        <label for="nausea">NAUSEA:</label>
+        <input type="number" id="nausea" name="nausea" required><br><br>
+        
+        <label for="dor_costas">DOR_COSTAS:</label>
+        <input type="number" id="dor_costas" name="dor_costas" required><br><br>
+        
+        <button type="submit">Predict</button>
+    </form>
+    <h2>Prediction Result:</h2>
+    <p id="result"></p>
+
+    <script>
+        document.getElementById('inference-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+            
+            try {
+                const response = await fetch('/predict_symptoms', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                document.getElementById('result').innerText = `Prediction: ${result.prediction}`;
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = `Error: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
