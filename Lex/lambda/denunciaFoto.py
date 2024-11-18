@@ -2,16 +2,13 @@ import boto3
 from rekognition import detectar_locais_proliferacao
 from bedrock import obter_dicas_dengue_bedrock
 
-
 # Inicializa o cliente S3
 s3_client = boto3.client("s3")
 
 
 def verifica_imagem_s3(bucket_name, nome_imagem):
     """Verifica se a imagem existe no bucket S3."""
-
     print(f"Verificando imagem no bucket '{bucket_name}' com nome '{nome_imagem}'")
-
     try:
         s3_client.head_object(Bucket=bucket_name, Key=nome_imagem)
         print(f"Imagem {nome_imagem} encontrada no S3.")
@@ -22,41 +19,21 @@ def verifica_imagem_s3(bucket_name, nome_imagem):
 
 
 def denunciaFoto_intent(event):
-    # Verifica se a intenção e os slots estão presentes
-    if (
-        "sessionState" not in event
-        or "intent" not in event["sessionState"]
-        or "slots" not in event["sessionState"]["intent"]
-    ):
-        print("Evento inválido recebido.")
-        return {
-            "sessionState": {
-                "dialogAction": {"type": "Close"},
-                "intent": {
-                    "name": event["sessionState"]["intent"]["name"],
-                    "state": "Failed",
-                },
-            },
-            "messages": [
-                {"contentType": "PlainText", "content": "Evento inválido."},
-            ],
-        }
-
-    # se o slot nomeImagem existe e se tem valor
+    # Obtém a intenção e slots do evento
+    current_intent = event["sessionState"]["intent"]["name"]
     slots = event["sessionState"]["intent"]["slots"]
-    nome_imagem = slots.get(
-        "nomeImagem"
-    )  # cuidadao com .get() em um dicionário potencialmente vazio
+    nome_imagem_slot = slots.get("nomeImagem")
+    label_slot = slots.get("label")
+    confirmacao_slot = slots.get("confirmacao")
 
-    if not nome_imagem or not nome_imagem.get("value"):
-        print("Slot 'nomeImagem' não encontrado ou vazio.")
+    # Verifica se o slot "nomeImagem" está preenchido
+    if not nome_imagem_slot or not nome_imagem_slot.get("value", {}).get(
+        "originalValue"
+    ):
         return {
             "sessionState": {
                 "dialogAction": {"type": "ElicitSlot", "slotToElicit": "nomeImagem"},
-                "intent": {
-                    "name": event["sessionState"]["intent"]["name"],
-                    "state": "InProgress",
-                },
+                "intent": {"name": current_intent, "slots": slots},
             },
             "messages": [
                 {
@@ -66,85 +43,162 @@ def denunciaFoto_intent(event):
             ],
         }
 
-    nome_imagem_value = nome_imagem.get("value").get(
-        "originalValue"
-    )  # valor original do slot nomeImagem
-
-    if not nome_imagem_value:  # se o nome da imagem foi passado corretamente
-        print("Nome da imagem não encontrado.")
-        return {
-            "sessionState": {
-                "dialogAction": {"type": "Close"},
-                "intent": {
-                    "name": event["sessionState"]["intent"]["name"],
-                    "state": "Failed",
-                },
-            },
-            "messages": [
-                {
-                    "contentType": "PlainText",
-                    "content": "Nome da imagem não foi fornecido.",
-                },
-            ],
-        }
-
-    # Verifica se a imagem existe no bucket S3
+    nome_imagem = nome_imagem_slot["value"]["originalValue"]
     bucket_name = "denguefoto"
-    if not verifica_imagem_s3(bucket_name, nome_imagem_value):
+
+    # Verifica se a imagem existe no S3
+    # if not verifica_imagem_s3(bucket_name, nome_imagem):
+    #     return {
+    #         "sessionState": {
+    #             "dialogAction": {"type": "Close"},
+    #             "intent": {"name": current_intent, "state": "Failed"},
+    #         },
+    #         "messages": [
+    #             {
+    #                 "contentType": "PlainText",
+    #                 "content": f"A imagem '{nome_imagem}' não foi encontrada no sistema.",
+    #             },
+    #         ],
+    #     }
+    if not verifica_imagem_s3(bucket_name, nome_imagem):
+        slots["nomeImagem"] = (
+            None  # Limpa o slot nomeImagem para permitir uma nova tentativa
+        )
         return {
             "sessionState": {
-                "dialogAction": {"type": "Close"},
-                "intent": {
-                    "name": event["sessionState"]["intent"]["name"],
-                    "state": "Failed",
-                },
+                "dialogAction": {"type": "ElicitSlot", "slotToElicit": "nomeImagem"},
+                "intent": {"name": current_intent, "slots": slots},
             },
             "messages": [
                 {
                     "contentType": "PlainText",
-                    "content": f"Imagem {nome_imagem_value} não encontrada no S3.",
+                    "content": f"A imagem não foi encontrada no sistema. Por favor, envie outra imagem.",
                 },
             ],
         }
 
-    # Usa o Rekognition para detectar locais suspeitos na imagem
-    locais_detectados, local_suspeito = detectar_locais_proliferacao(
-        bucket_name, nome_imagem_value
-    )
-
-    # Verifica se locais suspeitos foram encontrados
-    mensagem_risco = (
-        "Locais suspeitos de proliferação de dengue foram identificados."
-        if locais_detectados
-        else "Nenhum local suspeito de proliferação de dengue foi identificado na imagem."
-    )
-    # print(locais_detectados, local_suspeito)
-
-    # # Usa o Bedrock para obter dicas de prevenção
-    try:
+    # Detecta locais suspeitos usando Rekognition
+    if not label_slot or not label_slot.get("value", {}).get("originalValue"):
+        locais_detectados, local_suspeito = detectar_locais_proliferacao(
+            bucket_name, nome_imagem
+        )
         if local_suspeito:
-            print(f"Entrou no if do bedrock: {local_suspeito['Nome']}")
-            dicas_prevencao = obter_dicas_dengue_bedrock(local_suspeito["Nome"])
-            print(f"Dicas de prevenção: {dicas_prevencao}")
-        else:
-            dicas_prevencao = (
-                "Lembre-se de não deixar água parada e tampar recipientes."
-            )
-    except Exception as e:
-        print(f"Erro ao obter dicas de prevenção com o Bedrock: {str(e)}")
-        dicas_prevencao = "Não foi possível obter dicas de prevenção no momento."
+            label_detectado = local_suspeito["Nome"]
+            print(f"Oi estou conferindo meu bug {label_detectado}")
 
-    # Retorna a resposta para o usuário
+            # Atualiza o slot label com o valor detectado
+            slots["label"] = {
+                "value": {
+                    "originalValue": label_detectado,
+                    "interpretedValue": label_detectado,
+                }
+            }
+
+            return {
+                "sessionState": {
+                    "dialogAction": {
+                        "type": "ElicitSlot",
+                        "slotToElicit": "confirmacao",
+                    },
+                    "intent": {"name": current_intent, "slots": slots},
+                },
+                "messages": [
+                    {
+                        "contentType": "PlainText",
+                        "content": f"Detectamos um possível '{label_detectado}' na imagem. Você confirma essa identificação?",
+                    },
+                ],
+            }
+        else:
+            return {
+                "sessionState": {
+                    "dialogAction": {"type": "Close"},
+                    "intent": {"name": current_intent, "state": "Failed"},
+                },
+                "messages": [
+                    {
+                        "contentType": "PlainText",
+                        "content": "Nenhum local suspeito foi identificado na imagem.",
+                    },
+                ],
+            }
+
+    # Verifica a confirmação do usuário
+    if confirmacao_slot:
+        resposta_confirmacao = confirmacao_slot["value"]["interpretedValue"].lower()
+        print(f"A minha resposta é: {resposta_confirmacao}")
+
+        if resposta_confirmacao == "não":
+            slots["label"] = None  # apaga a label antiga (que estaria "errada")
+            slots["confirmacao"] = None  # evita loop eterno de uma mente sem lembranças
+
+            # user preenche manualmente o valor do slot label
+            return {
+                "sessionState": {
+                    "dialogAction": {
+                        "type": "ElicitSlot",  # Solicita ao usuário para preencher o slot
+                        "slotToElicit": "label",  # Especifica qual slot será preenchido
+                    },
+                    "intent": {
+                        "name": current_intent,
+                        "slots": slots,  # Passa os slots para o estado da sessão-> label vazio
+                    },
+                },
+                "messages": [
+                    {
+                        "contentType": "PlainText",
+                        "content": "Por favor, descreva o que você identificou na imagem.",  # Mensagem para o usuário
+                    },
+                ],
+            }
+        elif resposta_confirmacao == "sim":
+            # Confirma o label e segue o fluxo
+            print(
+                f"Usuário confirmou a identificação: {label_slot['value']['originalValue']}"
+            )
+
+    # Verifica se o slot "label" foi preenchido manualmente ou confirmado
+    if label_slot and label_slot.get("value", {}).get("originalValue"):
+        novo_label = label_slot["value"]["originalValue"]
+        slots["label"] = {
+            "value": {
+                "originalValue": novo_label,
+                "interpretedValue": novo_label,
+            }
+        }
+        print(f"Novo label definido pelo usuário: {novo_label}")
+
+        try:
+            dicas_prevencao = obter_dicas_dengue_bedrock(novo_label)
+        except Exception as e:
+            print(f"Erro ao obter dicas de prevenção: {str(e)}")
+            dicas_prevencao = "Não foi possível obter dicas de prevenção no momento. BedRock está fora do ar"
+
+        # Mensagem final
+        mensagem_risco = (
+            "Locais suspeitos de proliferação de dengue foram identificados."
+        )
+        return {
+            "sessionState": {
+                "dialogAction": {"type": "Close"},
+                "intent": {"name": current_intent, "state": "Fulfilled"},
+            },
+            "messages": [
+                {"contentType": "PlainText", "content": mensagem_risco},
+                {"contentType": "PlainText", "content": dicas_prevencao},
+            ],
+        }
+
+    # Caso nenhum fluxo seja ativado
     return {
         "sessionState": {
-            "dialogAction": {"type": "Close"},
-            "intent": {
-                "name": event["sessionState"]["intent"]["name"],
-                "state": "Fulfilled",
-            },
+            "dialogAction": {"type": "ElicitSlot", "slotToElicit": "label"},
+            "intent": {"name": current_intent, "slots": slots},
         },
         "messages": [
-            {"contentType": "PlainText", "content": mensagem_risco},
-            {"contentType": "PlainText", "content": dicas_prevencao},
+            {
+                "contentType": "PlainText",
+                "content": "Ainda precisamos que você confirme ou preencha o rótulo da imagem.",
+            },
         ],
     }
