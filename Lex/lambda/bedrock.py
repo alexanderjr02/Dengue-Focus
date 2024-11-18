@@ -57,5 +57,3 @@ def obter_dicas_dengue_bedrock(local_suspeito):
     except Exception as e:
         print(f"Erro ao acessar o Amazon Bedrock: {e}")
         return "Erro ao obter dicas de prevenção da dengue."
-
-
