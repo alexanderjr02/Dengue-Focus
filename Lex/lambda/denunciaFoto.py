@@ -2,10 +2,9 @@ import boto3
 import random
 from rekognition import detectar_locais_proliferacao
 from bedrock import obter_dicas_dengue_bedrock
-
-# from cohere_utils import obter_dicas_dengue_cohere
+#from cohere_utils import obter_dicas_dengue_cohere
 from dicionarioDicas import obter_dica_aleatoria
-# from gpt import obter_dicas_dengue_gpt
+#from gpt import obter_dicas_dengue_gpt
 
 
 # Inicializa o cliente S3
@@ -47,9 +46,7 @@ def denunciaFoto_intent(event):
     confirmacao_slot = slots.get("confirmacao")
 
     # Verifica se o slot "nomeImagem" está preenchido
-    if not nome_imagem_slot or not nome_imagem_slot.get("value", {}).get(
-        "originalValue"
-    ):
+    if not nome_imagem_slot or not nome_imagem_slot.get("value", {}).get("originalValue"):
         return {
             "sessionState": {
                 "dialogAction": {"type": "ElicitSlot", "slotToElicit": "nomeImagem"},
@@ -78,17 +75,11 @@ def denunciaFoto_intent(event):
                 "imageResponseCard": {
                     "title": "Como posso te ajudar?",
                     "buttons": [
-                        {
-                            "text": "Reportar foco de dengue",
-                            "value": "Reportar foco de dengue",
-                        },
+                        {"text": "Reportar foco de dengue", "value": "Reportar foco de dengue"},
                         {"text": "Verificar sintomas", "value": "Sintomas"},
                         {"text": "Dicas de Prevenção", "value": "Prevenção"},
                         {"text": "Dicas de tratamento", "value": "Tratamento"},
-                        {
-                            "text": "Informação para contato",
-                            "value": "Informação para contato",
-                        },
+                        {"text": "Informação para contato", "value": "Informação para contato"},
                     ],
                 },
             }
@@ -110,12 +101,8 @@ def denunciaFoto_intent(event):
             }
 
         # Caso não tenha atingido o limite, solicita outra imagem com mensagem aleatória
-        slots["nomeImagem"] = (
-            None  # Limpa o slot nomeImagem para permitir uma nova tentativa
-        )
-        mensagem_falha = random.choice(
-            mensagens_falha
-        )  # Seleciona uma mensagem aleatória
+        slots["nomeImagem"] = None  # Limpa o slot nomeImagem para permitir uma nova tentativa
+        mensagem_falha = random.choice(mensagens_falha)  # Seleciona uma mensagem aleatória
         return {
             "sessionState": {
                 "dialogAction": {"type": "ElicitSlot", "slotToElicit": "nomeImagem"},
@@ -199,9 +186,7 @@ def denunciaFoto_intent(event):
             }
         elif resposta_confirmacao == "sim":
             # Confirma o label e segue o fluxo
-            print(
-                f"Usuário confirmou a identificação: {label_slot['value']['originalValue']}"
-            )
+            print(f"Usuário confirmou a identificação: {label_slot['value']['originalValue']}")
 
     # Verifica se o slot "label" foi preenchido manualmente ou confirmado
     if label_slot and label_slot.get("value", {}).get("originalValue"):
@@ -215,17 +200,13 @@ def denunciaFoto_intent(event):
         print(f"Novo label definido pelo usuário: {novo_label}")
 
         try:
-            dicas_prevencao = obter_dicas_dengue_bedrock(novo_label)  # fora do ar hehe
-            # dicas_prevencao = obter_dica_aleatoria(novo_label)
-            # dicas_prevencao = obter_dicas_dengue_gpt(novo_label)
-            dicas = dicas_prevencao.split("2. ")
-            dica1 = "1 - " + dicas[0].replace("1. ", "").strip()
-            dica2 = "2 - " + dicas[1].split("3. ")[0].strip() if len(dicas) > 1 else ""
-            dica3 = (
-                "3 - " + dicas[1].split("3. ")[1].strip()
-                if len(dicas[1].split("3. ")) > 1
-                else ""
-            )
+            dicas_prevencao = obter_dicas_dengue_bedrock(novo_label) # fora do ar hehe
+            #dicas_prevencao = obter_dica_aleatoria(novo_label)
+            #dicas_prevencao = obter_dicas_dengue_gpt(novo_label)
+            dicas = dicas_prevencao.split('2. ')
+            dica1 = '1 - ' + dicas[0].replace('1. ', '').strip()
+            dica2 = '2 - ' + dicas[1].split('3. ')[0].strip() if len(dicas) > 1 else ''
+            dica3 = '3 - ' + dicas[1].split('3. ')[1].strip() if len(dicas[1].split('3. ')) > 1 else ''
         except Exception as e:
             print(f"Erro ao obter dicas de prevenção: {str(e)}")
             dicas_prevencao = "Não foi possível obter dicas de prevenção no momento. BedRock está fora do ar"
@@ -244,10 +225,7 @@ def denunciaFoto_intent(event):
                 {"contentType": "PlainText", "content": dica1},
                 {"contentType": "PlainText", "content": dica2},
                 {"contentType": "PlainText", "content": dica3},
-                {
-                    "contentType": "PlainText",
-                    "content": "Obrigado por usar o DengueBot. Se precisar de algo mais, é só falar.",
-                },
+                {"contentType": "PlainText", "content": "Obrigado por usar o DengueBot. Se precisar de algo mais, é só falar."}
             ],
         }
 

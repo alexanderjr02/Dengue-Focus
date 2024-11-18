@@ -3,10 +3,12 @@ import boto3
 def contato_intent(event):
     
     # Mensagens sobre os cuidados com a dengue
-    message = "Caso você não tenha acesso ao foco de dengue ou ache que não é capaz de lidar com essa situação, entre em contato: "
-    message1 = "Você pode ligar para os números: 199 ou 193"
-    message2 = "Para fazer reclamações: https://www.participa.df.gov.br/pages/registro-manifestacao/relato"
-
+    message = "❗ Não se preocupe! Caso não seja seguro remover o foco do mosquito ou precise de apoio, aqui estão algumas formas de obter ajuda:"
+    message1 = "📞 Disque Saúde - Telefone 199: Canal direto para denúncias sobre focos de dengue."
+    message2 = "📞 Ouvidoria Geral do GDF - Telefone 162: Para denúncias e informações gerais sobre saúde pública."
+    message3 = "📲 Brasília Ambiental: Registre focos de dengue e solicite inspeções online: https://www.ibram.df.gov.br"
+    message4 = "🔔 Sua segurança é muito importante! Se precisar, entre em contato para tratar o foco de maneira segura."
+    message5 = "🤝 Juntos, podemos combater a dengue. Estamos aqui para ajudar no que for preciso!"
 
     # Estrutura de resposta para o Lex já com os aúdios pra cada mensagem
     response = {
@@ -18,6 +20,9 @@ def contato_intent(event):
             {"contentType": "PlainText", "content": message},
             {"contentType": "PlainText", "content": message1},
             {"contentType": "PlainText", "content": message2},
+            {"contentType": "PlainText", "content": message3},
+            {"contentType": "PlainText", "content": message4},
+            {"contentType": "PlainText", "content": message5},
         ],
     }
 
