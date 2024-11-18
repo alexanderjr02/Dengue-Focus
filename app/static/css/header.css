@@ -1,0 +1,35 @@
+/* Estilizando do cabeçalho*/
+header{
+    padding: 28px 8%;
+    text-align: center;
+    color:  #FFD016; 
+    
+}
+
+.header {
+    user-select: none;
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    padding: 2rem 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 99;
+    transition: top 0.3s ease-in-out;
+    background-color: rgba(0, 0, 0, .9); 
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px); 
+}
+
+#logo{
+    font-size: 24px;
+}
+
+.logo {
+    width: 100%;
+}
+
+.logo img {
+    width: 150px;
+}

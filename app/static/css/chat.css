@@ -1,0 +1,391 @@
+/*************** CHATBOT SECTION ***************/
+.chatbot {
+    background-color: var(--color-black);
+    width: 100%;
+    padding: 5rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.conteudo-chatbot {
+    max-width: 600px;
+    height: 75vh; /* Ocupa toda a altura da tela */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
+.container-chatbot {
+    width: 100%;
+    background-color: #000;
+    border-radius: 10px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+}
+.headline-chatbot {
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #FFD016;
+    text-align: center;
+    animation: fadeIn 1s ease-in-out;
+    margin-bottom: 50px;
+}
+
+.headline-scroll {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    animation: scroll 20s linear infinite;
+    padding-top: 20px;
+}
+
+@keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.headline-chatbot .headline-scroll span {
+    font-family: var(--font-grande);
+    font-weight: bold;
+    color: #FFD016;
+    margin: 0 10px;
+}
+
+.headline-chatbot .headline-scroll .divisor {
+    width: 8px;
+    height: 8px;
+    background-color: #FFD016;
+    border-radius: 50%;
+    margin: 0 10px;
+}
+
+/* Área de Mensagens */
+.chat-window {
+    flex-grow: 1; /* Expande para ocupar o espaço entre o cabeçalho e a área de entrada */
+    overflow-y: auto; /* Barra de rolagem só aparece quando necessário */
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 5px; /* Ajuste para reduzir a distância entre a área de mensagens e a área de input */
+}
+/* Estilo para o player de áudio */
+.audio-player {
+    background-color: #e0e0e0;
+    color: #000;
+    text-align: right;
+    max-width: 75%;
+    border-radius: 18px 18px 0 18px;
+    padding: 5px;
+    margin-left: auto;
+    word-wrap: break-word; /* Quebra palavras longas */
+    overflow-wrap: break-word; /* Quebra para evitar vazamento */
+    white-space: normal; 
+}
+
+.audio-player.playing {
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); /* Brilho ao redor */
+    transform: scale(1.05); /* Leve aumento no tamanho */
+    transition: all 0.3s ease-in-out;
+}
+.audio-player:hover {
+    background-color: #d0d0d0; /* Fundo ligeiramente mais escuro */
+    cursor: pointer;
+}
+
+/* Estrutura da mensagem do bot e do usuário */
+.message {
+    position: relative;
+    display: grid;
+    align-items: flex-start;
+    margin: 5px 0; /* Espaço extra para garantir que o ícone não fique cortado */
+    flex-wrap: wrap; /* Permite que os botões quebrem para novas linhas */
+    gap: 8px; /* Espaço entre os botões */
+    padding-left: 28px; 
+    align-items: center;/* Espaço para alinhar o conteúdo do balão após o ícone */
+}
+
+.message button {
+    background-color: #FFD700; /* Cor de fundo amarela */
+    color: #000; /* Texto preto */
+    border: 2px solid #FFD700; /* Borda com a mesma cor da cor de fundo para efeito de contorno */
+    padding: 8px 12px; /* Ajuste de padding para deixar os botões mais compactos */
+    font-size: 15px; /* Tamanho do texto levemente menor */
+    font-weight: 600; /* Reduz o peso do texto para 600 */
+    cursor: pointer; /* Muda o cursor ao passar sobre o botão */
+    border-radius: 8px; /* Cantos um pouco mais arredondados */
+    flex: 1 1 45%; /* Cada botão ocupa cerca de 45% da largura */
+    max-width: 45%; /* Limita a largura máxima */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transição suave para mudanças de cor */
+}
+/* Ícone do Bot (posicionado acima do balão de mensagem) */
+.message i#icone-bot {
+    font-size: 24px;
+    color: #FFD016;
+    position: absolute;
+    top: -10px; /* Posiciona o ícone acima do balão */
+    left: 0; /* Alinha o ícone com a borda esquerda do balão */
+}
+
+/* Configuração do conteúdo da mensagem para usar Flexbox, sem background */
+.message-content {
+    display: flex;
+    /*justify-content: space-between; /* Espaço entre o texto e o ícone de áudio */
+    align-items: flex-end; /* Alinha o ícone na parte inferior do contêiner */
+}
+
+/* Ajuste do ícone de áudio */
+.audio-icon {
+    font-size: 18px;
+    color: #FFD016;
+    cursor: pointer;
+    margin-left: 3px; /* Empurra o ícone para o lado direito */
+    align-self: flex-end; /* Alinha o ícone na parte inferior do contêiner */
+}
+
+
+.bot-message p{
+    max-width: 75%;
+    background-color: #FFD016;
+    color: #000;
+    border-radius: 0px 18px 18px 18px;
+    padding: 10px;
+    text-align: left;
+    word-wrap: break-word; /* Quebra palavras longas */
+    overflow-wrap: break-word; /* Garante quebra para evitar vazamento */
+    white-space: normal; /* Permite quebras de linha automaticamente */
+}
+
+
+.bot-message .message-content p{
+    background-color: #FFD016;
+    color: #000;
+    border-radius: 0px 18px 18px 18px;
+    padding: 10px;
+    max-width: 75%;
+    text-align: left;
+    word-wrap: break-word; /* Quebra palavras longas */
+    overflow-wrap: break-word; /* Garante quebra para evitar vazamento */
+    white-space: normal; /* Permite quebras de linha automaticamente */
+}
+
+
+
+/* Estilo da Mensagem do Usuário */
+.user-message {
+    background-color: #e0e0e0;
+    color: #000;
+    text-align: right;
+    max-width: 75%;
+    border-radius: 18px 18px 0 18px;
+    padding: 10px;
+    margin-left: auto;
+    word-wrap: break-word; /* Quebra palavras longas */
+    overflow-wrap: break-word; /* Quebra para evitar vazamento */
+    white-space: normal; /* Permite quebras de linha automaticamente */
+}
+
+.user-message p {
+    word-wrap: break-word;
+    white-space: normal;
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+
+/* Ajustes para o texto dentro das mensagens */
+.message-content p {
+    margin: 0;
+    line-height: 1.4;
+    font-size: 16px;
+    word-wrap: break-word; /* Quebra palavras longas */
+    overflow-wrap: break-word; /* Quebra para evitar vazamento */
+    white-space: normal; /* Permite quebras de linha automaticamente */
+}
+
+/* Área de Entrada de Texto e Ícones */
+.input-area {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+    padding: 10px;
+    background-color: #333; /* Ajuste para combinar com o design */
+    box-sizing: border-box; /* Garante que padding não afete o tamanho total */
+    border-radius: 26px; /* Deixa o input com cantos arredondados */
+}
+
+/* Estilo do Textarea para entrada de texto */
+textarea#user-input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 26px;
+    background-color: #333;
+    color: #FFF;
+    outline: none;
+    resize: none; /* Remove o redimensionamento manual */
+    overflow-y: hidden; /* Esconde a barra de rolagem vertical */
+    font-size: 16px;
+    line-height: 1.4;
+    text-align: left;
+    height: 40px;
+    box-sizing: border-box; /* Inclui padding no cálculo da altura */
+}
+
+
+/* Estilo padrão para os botões da área de entrada */
+button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+button i {
+    color: #FFD016; /* Cor padrão para os ícones da área de entrada */
+    font-size: 18px;
+    transition: color 0.3s ease; /* Transição suave para a mudança de cor */
+}
+
+/* Mudança de cor para branco ao passar o mouse */
+button:hover i {
+    color: #FFFFFF; /* Cor branca ao passar o mouse */
+}
+
+
+/* Estilo do botão de áudio enquanto está gravando */
+#audio-button.recording i {
+    color: red; /* Muda a cor para vermelho ao gravar */
+    animation: pulse 1s infinite; /* Opcional: adiciona uma animação de pulsação */
+}
+
+/* Estilo padrão do ícone de áudio ao lado da mensagem do bot */
+.audio-icon {
+    color: #FFD016; /* Cor padrão do ícone de áudio do bot */
+    font-size: 18px;
+    
+}
+
+.audio-icon:hover{
+    color: #FFFFFF; /* Cor branca ao passar o mouse */
+}
+
+/* Estilo do ícone enquanto o áudio está sendo reproduzido */
+.audio-icon.playing-audio {
+    color: #FF4500; /* Cor para indicar reprodução */
+    animation: pulse 1s infinite; /* Animação opcional para indicar reprodução */
+}
+
+/* Animação de pulsação para indicar estado ativo */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/*Imagem enviada*/
+.sent-image {
+    max-width: 200px; /* Defina o tamanho máximo que desejar */
+    max-height: 200px; /* Para garantir que a altura não ultrapasse */
+    width: auto; /* Ajusta automaticamente a largura */
+    height: auto; /* Ajusta automaticamente a altura */
+    border-radius: 8px; /* Opcional: adiciona bordas arredondadas */
+    object-fit: cover; /* Garante que a imagem se ajuste ao contêiner */
+}
+
+/* Estilização específica para os botões de opções do Amazon Lex dentro da janela do chat */
+.chat-window button {
+    background-color: #FF8000; /* Cor de fundo amarela */
+    color: #000; /* Texto preto */
+    border: none; /* Remove bordas */
+    padding: 10px;/* Espessura do botão */
+    font-size: 16px; /* Tamanho do texto */
+    font-weight: bold; /* Texto em negrito */
+    cursor: pointer; /* Muda o cursor ao passar sobre o botão */
+    margin: 2px; /* Espaçamento entre botões */
+    transition: background-color 0.3s ease; /* Animação para o efeito hover */
+    border-radius: 10px;
+    
+}
+
+/* Efeito hover para os botões */
+.chat-window button:hover {
+    background-color: #FF4500; /* Cor de fundo levemente mais escura ao passar o mouse */
+}
+
+/* Estilo para o botão em foco */
+.chat-window button:focus {
+    outline: none; /* Remove a borda de foco padrão */
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); /* Adiciona uma sombra ao redor do botão */
+}
+
+
+@keyframes colorDots {
+    0%, 20% { content: '.'; color: #FFD016; }
+    40% { content: '..'; color: #FFA500; }
+    60% { content: '...'; color: #FF4500; }
+    100% { content: ''; color: #FFD016; }
+}
+
+#refresh-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+#refresh-button i {
+    color: #FFD016;
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+#refresh-button:hover i {
+    color: #FFFFFF;
+}
+
+/* Estilo do indicador de "digitando" */
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.typing-indicator .dot {
+    width: 8px;
+    height: 8px;
+    margin: 0 4px;
+    background-color: #ccc;
+    border-radius: 50%;
+    animation: typing 1.5s infinite ease-in-out;
+}
+
+.typing-indicator .dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-indicator .dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typing {
+    0%, 80%, 100% {
+        transform: scale(0);
+    }
+    40% {
+        transform: scale(1);
+    }
+}
