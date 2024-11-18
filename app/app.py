@@ -4,7 +4,7 @@ import boto3
 import base64
 import os
 import uuid  # hash da imagem -> id único
-from stt_api import transcribe_audio  # Importando a função da API STT
+from stt import transcribe_audio  # Importando a função da API STT
 import json
 from tts import get_audio_url_from_tts  # Importar a função de TTS
 
@@ -13,15 +13,15 @@ socketio = SocketIO(app)
 
 # Configurações da AWS
 aws_region = "us-east-1"  # Altere conforme necessário
-s3_bucket = "denguefoto"
+s3_bucket = "projeto-final-grupo-2"
 
 # Inicialização dos clientes da AWS
 lex_client = boto3.client("lexv2-runtime", region_name=aws_region)
 s3_client = boto3.client("s3", region_name=aws_region)
 
 # Variáveis do bot Lex V2 (alterar conforme necessário)
-bot_id = "XLBAZBBYLD"
-bot_alias_id = "QWV0WA4M8N"
+bot_id = "KF1FJWESHS"
+bot_alias_id = "TSTALIASID"
 locale_id = "pt_BR"
 
 

@@ -10,7 +10,7 @@ transcribe_client = boto3.client("transcribe")
 s3_client = boto3.client("s3")
 
 # Nome do bucket S3 para armazenar o áudio
-s3_bucket_name = "projeto-final-grupo2"
+s3_bucket_name = "audios-grupo3"
 
 
 def transcribe_audio(audio_content_base64):

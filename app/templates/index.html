@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- Link CSS usando url_for -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/resultado-esperado.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/chat.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/resultado-esperado.css') }}">
 
     <!-- CSS do Leaflet e Bootstrap -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
@@ -91,18 +91,12 @@
             <div class="conteudo-chatbot">
                 <!-- Área de Mensagens -->
                 <div class="chat-window" id="chat-window" data-aos="fade-right" data-aos-duration="1000">
-                        <!-- Indicador de "digitando" -->
-                        <div id="typing-indicator" class="typing-indicator" style="display: none;">
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                    </div>
                     <div class="message bot-message">
                         <i id="icone-bot" class="fa-solid fa-circle-user"></i>
                         <div class="message-content">
-                            <p>Envie uma mensagem para começarmos nosso bate-papo e descobrir como prevenir a dengue juntos.</p>
+                            <p>🔴 Aviso Importante:
+                                Este chatbot não substitui consulta médica ou diagnóstico profissional. As informações fornecidas têm caráter informativo e educacional. Em caso de dúvidas sobre sua saúde ou emergências, procure um médico ou serviço de saúde especializado imediatamente.</p>
                         </div>
-                            <i class="fa-solid fa-volume-up audio-icon" onclick="playAudio(this)" data-audio-url="URL_DO_AUDIO"></i>
                     </div>
                     <div id="typing-indicator" style="display: none;">...</div>
 
@@ -164,6 +158,8 @@
         </div>
     </section>
 
+    <!-- Scripts do botão refresh-->
+
     <!-- Scripts para SocketIO e AOS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -176,11 +172,11 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
     <!-- JavaScript customizado usando url_for -->
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/sendAudio.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/sendImage.js') }}"></script> 
-    <script src="{{ url_for('static', filename='js/playAudio.js') }}"></script> 
-    <script src="{{ url_for('static', filename='js/sendMessage.js') }}"></script> 
+    <script src="{{ url_for('static', filename='JS/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='JS/sendAudio.js') }}"></script>
+    <script src="{{ url_for('static', filename='JS/sendImage.js') }}"></script> 
+    <script src="{{ url_for('static', filename='JS/playAudio.js') }}"></script> 
+    <script src="{{ url_for('static', filename='JS/sendMessage.js') }}"></script> 
 
 
 </body>

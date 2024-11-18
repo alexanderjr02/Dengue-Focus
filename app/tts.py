@@ -8,7 +8,7 @@ s3_client = boto3.client("s3", region_name="us-east-1")
 dynamodb = boto3.resource("dynamodb", region_name="us-east-1")
 
 # Bucket S3 e tabela DynamoDB
-s3_bucket_name = "projeto-final-grupo2"
+s3_bucket_name = "projeto-final-grupo-2"
 dynamo_table_name = "projeto-final-grupo2"
 table = dynamodb.Table(dynamo_table_name)
 
