@@ -1,19 +1,14 @@
-# from utils import get_audio_url_from_tts
-
-
 def saudacoes_intent(event):
     current_intent = event["sessionState"]["intent"]["name"]
 
-    # lex_message = "Selecione uma opção para atendimento: Caso queira agendar uma consulta, clique em Agendar, caso queira verificar uma consulta, clique em verificar e caso queira cancelar uma consulta, clique em cancelar"
+    # Adicione o log aqui para capturar informações da intent e dos slots
+    print(
+        f"Intent: {current_intent}, Slots: {event['sessionState']['intent']['slots']}"
+    )
+
     lex_message = f"Olá! Bem-vindo ao Chatbot de Monitoramento de Dengue! Selecione o que deseja fazer"
 
-    # url_audio = get_audio_url_from_tts(lex_message)
-    # mensagem2 = (
-    #     f"Ouça o áudio aqui: {url_audio}" if url_audio else "Áudio não disponível"
-    # )
-
     action_type = "Close"
-
     # Estrutura do card de resposta
     card_response = {
         "contentType": "ImageResponseCard",
@@ -22,9 +17,13 @@ def saudacoes_intent(event):
             "buttons": [
                 {"text": "Reportar foco de dengue", "value": "Reportar foco de dengue"},
                 {"text": "Verificar sintomas", "value": "Sintomas"},
-                {"text": "Previsão do meu bairro", "value": "Bairro"},
+                # {"text": "Previsão do meu bairro", "value": "Bairro"},
                 {"text": "Dicas de Prevenção", "value": "Prevenção"},
                 {"text": "Dicas de tratamento ", "value": "Tratamento"},
+                {
+                    "text": "Informação para contato ",
+                    "value": "Informação para contato",
+                },
             ],
         },
     }
@@ -43,7 +42,6 @@ def saudacoes_intent(event):
         },
         "messages": [
             {"contentType": "PlainText", "content": lex_message},
-            # {"contentType": "PlainText", "content": mensagem2},
             card_response,
         ],
     }

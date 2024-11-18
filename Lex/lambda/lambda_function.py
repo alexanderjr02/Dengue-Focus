@@ -1,9 +1,8 @@
 import boto3
 from saudacoes import saudacoes_intent
 from denunciaFoto import denunciaFoto_intent
-
-# from infereSintomas import infereSintomas_intent
 from dicasTratamento import dicasTratamento_intent
+from contato import contato_intent
 
 
 def lambda_handler(event, context):
@@ -22,22 +21,16 @@ def lambda_handler(event, context):
     elif current_intent == "DenunciaFotoIntent":
         response = denunciaFoto_intent(event)
 
-    # # Inferência sintomas
-    # elif current_intent == "InfereSintomasIntent":
-    #     response = infereSintomas_intent(event)
-
     # Inferência sintomas
     elif current_intent == "DicasTratamentoDengue":
         response = dicasTratamento_intent(event)
 
+    elif current_intent == "ContatoIntent":
+        response = contato_intent(event)
     else:
         lex_message = "Desculpe, não entendi o que você disse."
         mensagem = f"{lex_message}"
 
-        # url_audio = get_audio_url_from_tts(lex_message)
-        # mensagem2 = (
-        #     f"Ouça o áudio aqui: {url_audio}" if url_audio else "Áudio não disponível"
-        # )
         response = {
             "sessionState": {
                 "dialogAction": {"type": "Close"},
@@ -45,7 +38,6 @@ def lambda_handler(event, context):
             },
             "messages": [
                 {"contentType": "PlainText", "content": mensagem},
-                # {"contentType": "PlainText", "content": mensagem2},
             ],
         }
 
