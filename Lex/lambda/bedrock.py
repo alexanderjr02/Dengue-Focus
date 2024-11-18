@@ -3,7 +3,7 @@ import boto3
 import json
 
 # Inicializando sessão com Bedrock
-cliente_bedrock = boto3.client("bedrock-runtime", region_name="eu-west-2")
+cliente_bedrock = boto3.client("bedrock-runtime", region_name="us-east-1")
 translate = boto3.client('translate', region_name='us-east-1')
 
 
@@ -27,9 +27,9 @@ def obter_dicas_dengue_bedrock(local_suspeito):
 
     print(f'local suspeito do bedrock: {local_suspeito}')
     entrada = (
-        f"Você é um especialista em saúde pública, focado na prevenção da dengue. "
-        f"Por favor, forneça dicas detalhadas sobre como eliminar e prevenir criadouros de mosquitos "
-        f"em locais como {local_suspeito}."
+        f"""Você é um especialista em saúde pública, focado na prevenção da dengue.
+            Por favor, forneça dicas detalhadas sobre como eliminar e prevenir criadouros de mosquitos
+            em locais como {local_suspeito}. Retorne 3 dicas no máximo, colocando a numeração a frente"""
     )
     
     modelo_id = "amazon.titan-text-express-v1"
@@ -57,5 +57,4 @@ def obter_dicas_dengue_bedrock(local_suspeito):
     except Exception as e:
         print(f"Erro ao acessar o Amazon Bedrock: {e}")
         return "Erro ao obter dicas de prevenção da dengue."
-
 

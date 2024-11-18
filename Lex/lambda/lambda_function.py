@@ -8,7 +8,6 @@ from infereSintomas import infereSintomas_intent
 from dicasDetect import dicasDetect_intent
 from detectaSintoma import detectaSintoma_evento
 
-
 def lambda_handler(event, context):
     # recuperando a entrada do Lex
     print(f"Evento recebido: {event}")
@@ -24,7 +23,7 @@ def lambda_handler(event, context):
     # Denúncia com foto
     elif current_intent == "DenunciaFotoIntent":
         response = denunciaFoto_intent(event)
-
+    
     # Inferência sintomas
     elif current_intent == "InfereSintomasIntent":
         response = infereSintomas_intent(event)
@@ -38,7 +37,7 @@ def lambda_handler(event, context):
 
     elif current_intent == "DicasPrevencaoIntent":
         response = dicasPrevencao_intent(event)
-
+    
     elif current_intent == "DicasDectectIntent":
         response = dicasDetect_intent(event)
 
@@ -59,10 +58,26 @@ def lambda_handler(event, context):
         response = detectaSintoma_evento(event, "dor_costas")
     elif current_intent == "DetectaExantemaIntent":
         response = detectaSintoma_evento(event, "exantema")
-
+    
     else:
-        lex_message = "Desculpe, não entendi o que você disse."
+        lex_message = "Desculpe, não entendi o que você disse. Mas podemos te ajudar com as seguintes funções:"
         mensagem = f"{lex_message}"
+
+        card_response = {
+        "contentType": "ImageResponseCard",
+        "imageResponseCard": {
+            "title": "Como posso te ajudar?",
+            "buttons": [
+                {"text": "Análise de Foco por Imagem", "value": "Análise de foco por imagem"},
+                {"text": "Verificar Sintomas", "value": "Sintomas"},
+                {"text": "Dicas de Prevenção", "value": "Prevenção"},
+                {"text": "Dicas de Tratamento ", "value": "Tratamento"},
+                {"text": "Informação para Contato ", "value": "Informação para contato"},
+
+                
+            ],
+        },
+    }
 
         response = {
             "sessionState": {
@@ -70,8 +85,9 @@ def lambda_handler(event, context):
                 "intent": {"name": current_intent, "state": "Fulfilled"},
             },
             "messages": [
-                {"contentType": "PlainText", "content": mensagem},
-            ],
+            {"contentType": "PlainText", "content": lex_message},
+            card_response,  
+        ],
         }
 
     return response
