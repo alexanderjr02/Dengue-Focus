@@ -16,9 +16,5 @@ COPY app/ .
 # Expose port 5000
 EXPOSE 5000
 
-# Set environment variables for AWS
-ENV AWS_DEFAULT_REGION=us-east-1
-ENV FLASK_ENV=production
-
 # Command to run the application
 CMD ["python", "app.py"]
