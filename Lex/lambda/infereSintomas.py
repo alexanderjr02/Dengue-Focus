@@ -3,9 +3,7 @@ import requests
 import logging
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 
 def parse_slot_value(slot_value):
@@ -15,7 +13,7 @@ def parse_slot_value(slot_value):
     """
     if isinstance(slot_value, dict):
         slot_value = slot_value.get("interpretedValue", "não")
-
+    
     if slot_value.lower() == "sim":
         return 1
     elif slot_value.lower() == "não":
@@ -25,10 +23,8 @@ def parse_slot_value(slot_value):
 
 
 def infereSintomas_intent(event):
-    logging.info(
-        "Recebendo evento para infereSintomas_intent: %s", json.dumps(event, indent=2)
-    )
-
+    logging.info("Recebendo evento para infereSintomas_intent: %s", json.dumps(event, indent=2))
+    
     # Recuperar sessionAttributes e slots
     session_attributes = event.get("sessionState", {}).get("sessionAttributes", {})
     slots = event["sessionState"]["intent"].get("slots", {})
@@ -39,20 +35,8 @@ def infereSintomas_intent(event):
             slots[key] = {"value": {"interpretedValue": value}}
 
     # Verificar se ainda há slots faltando
-    required_slots = [
-        "febre",
-        "dor_corpo",
-        "cefaleia",
-        "exantema",
-        "vomito",
-        "nausea",
-        "dor_costas",
-    ]
-    missing_slots = [
-        slot
-        for slot in required_slots
-        if not slots.get(slot) or not slots[slot].get("value")
-    ]
+    required_slots = ["febre", "dor_corpo", "cefaleia", "exantema", "vomito", "nausea", "dor_costas"]
+    missing_slots = [slot for slot in required_slots if not slots.get(slot) or not slots[slot].get("value")]
 
     if missing_slots:
         # Solicitar ao usuário preencher o próximo slot
@@ -77,11 +61,11 @@ def infereSintomas_intent(event):
                         "subTitle": "Por favor, selecione uma opção.",
                         "buttons": [
                             {"text": "Sim", "value": "sim"},
-                            {"text": "Não", "value": "não"},
-                        ],
+                            {"text": "Não", "value": "não"}
+                        ]
                     }
-                ],
-            },
+                ]
+            }
         }
 
     # Converter os valores dos slots para enviar à API
@@ -105,11 +89,7 @@ def infereSintomas_intent(event):
             headers={"Content-Type": "application/json"},
         )
 
-        logging.info(
-            "Resposta da API: Status Code %s, Corpo: %s",
-            response.status_code,
-            response.text,
-        )
+        logging.info("Resposta da API: Status Code %s, Corpo: %s", response.status_code, response.text)
 
         if response.status_code == 404:
             raise Exception("Endpoint da API não encontrado.")
@@ -136,10 +116,7 @@ def infereSintomas_intent(event):
         },
         "messages": [
             {"contentType": "PlainText", "content": mensagem},
-            {
-                "contentType": "PlainText",
-                "content": "Obrigado por usar o DengueBot. Se precisar de algo mais, é só falar.",
-            },
+            {"contentType": "PlainText", "content": "Obrigado por usar o DengueBot. Se precisar de algo mais, é só falar."}
         ],
     }
 
