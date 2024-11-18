@@ -42,11 +42,11 @@ def denunciaFoto_intent(event):
             ],
         }
 
-    # Verifica se o slot nomeImagem existe e se tem valor
+    # se o slot nomeImagem existe e se tem valor
     slots = event["sessionState"]["intent"]["slots"]
     nome_imagem = slots.get(
         "nomeImagem"
-    )  # Não usar .get() em um dicionário potencialmente vazio
+    )  # cuidadao com .get() em um dicionário potencialmente vazio
 
     if not nome_imagem or not nome_imagem.get("value"):
         print("Slot 'nomeImagem' não encontrado ou vazio.")
@@ -61,16 +61,16 @@ def denunciaFoto_intent(event):
             "messages": [
                 {
                     "contentType": "PlainText",
-                    "content": "Por favor, forneça o nome da imagem.",
+                    "content": "Por favor, envie a imagem que deseja verificar.",
                 },
             ],
         }
 
-    # Recupera o valor original do slot nomeImagem
-    nome_imagem_value = nome_imagem.get("value").get("originalValue")
+    nome_imagem_value = nome_imagem.get("value").get(
+        "originalValue"
+    )  # valor original do slot nomeImagem
 
-    # Verifica se o nome da imagem foi passado corretamente
-    if not nome_imagem_value:
+    if not nome_imagem_value:  # se o nome da imagem foi passado corretamente
         print("Nome da imagem não encontrado.")
         return {
             "sessionState": {

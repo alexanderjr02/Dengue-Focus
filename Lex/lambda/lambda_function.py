@@ -2,6 +2,9 @@ import boto3
 from saudacoes import saudacoes_intent
 from denunciaFoto import denunciaFoto_intent
 
+# from infereSintomas import infereSintomas_intent
+from dicasTratamento import dicasTratamento_intent
+
 
 def lambda_handler(event, context):
     # recuperando a entrada do Lex
@@ -18,6 +21,14 @@ def lambda_handler(event, context):
     # Denúncia com foto
     elif current_intent == "DenunciaFotoIntent":
         response = denunciaFoto_intent(event)
+
+    # # Inferência sintomas
+    # elif current_intent == "InfereSintomasIntent":
+    #     response = infereSintomas_intent(event)
+
+    # Inferência sintomas
+    elif current_intent == "DicasTratamentoDengue":
+        response = dicasTratamento_intent(event)
 
     else:
         lex_message = "Desculpe, não entendi o que você disse."

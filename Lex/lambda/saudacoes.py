@@ -21,12 +21,10 @@ def saudacoes_intent(event):
             "title": "Como posso te ajudar?",
             "buttons": [
                 {"text": "Reportar foco de dengue", "value": "Reportar foco de dengue"},
-                {"text": "Reportar sintomas", "value": "Sintomas"},
-                {"text": "Tirar dúvidas", "value": "Dúvidas"},
-                {
-                    "text": "Informar-se sobre sintomas da dengue",
-                    "value": "Info Sintomas",
-                },
+                {"text": "Verificar sintomas", "value": "Sintomas"},
+                {"text": "Previsão do meu bairro", "value": "Bairro"},
+                {"text": "Dicas de Prevenção", "value": "Prevenção"},
+                {"text": "Dicas de tratamento ", "value": "Tratamento"},
             ],
         },
     }
