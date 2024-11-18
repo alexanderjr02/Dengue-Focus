@@ -1,3 +1,4 @@
+# caso o bedrock saia do ar
 import random
 
 # Dicionário de dicas para prevenção da dengue - para labels
@@ -99,9 +100,8 @@ dicas_dengue = {
 }
 
 
-def obter_dica_aleatoria(
-    label_traduzido,
-):  # Retorna uma dica aleatória para a prevenção da dengue baseada no rótulo traduzido.
+def obter_dica_aleatoria(label_traduzido): #Retorna uma dica aleatória para a prevenção da dengue baseada no rótulo traduzido.
+
     label = label_traduzido.lower()  # Normaliza para letras minúsculas
     if label in dicas_dengue:
         return random.choice(dicas_dengue[label])
