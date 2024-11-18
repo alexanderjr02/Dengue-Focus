@@ -1,9 +1,27 @@
 import boto3
+import random
 from rekognition import detectar_locais_proliferacao
 from bedrock import obter_dicas_dengue_bedrock
 
+# from cohere_utils import obter_dicas_dengue_cohere
+from dicionarioDicas import obter_dica_aleatoria
+# from gpt import obter_dicas_dengue_gpt
+
+
 # Inicializa o cliente S3
 s3_client = boto3.client("s3")
+
+# Variável de controle de tentativas no escopo global
+tentativas_falhas = 0
+
+# Mensagens variadas para falhas
+mensagens_falha = [
+    "A imagem não foi encontrada no sistema. Por favor, tente novamente.",
+    "Parece que houve um problema com a imagem. Por favor, envie outra.",
+    "Não conseguimos localizar a imagem no sistema. Tente enviar novamente.",
+    "A imagem enviada não foi encontrada. Por favor, envie uma nova imagem.",
+    "Houve um erro ao processar a imagem. Por favor, tente outra.",
+]
 
 
 def verifica_imagem_s3(bucket_name, nome_imagem):
@@ -19,6 +37,8 @@ def verifica_imagem_s3(bucket_name, nome_imagem):
 
 
 def denunciaFoto_intent(event):
+    global tentativas_falhas  # Controla as falhas globalmente dentro da intent
+
     # Obtém a intenção e slots do evento
     current_intent = event["sessionState"]["intent"]["name"]
     slots = event["sessionState"]["intent"]["slots"]
@@ -47,23 +67,55 @@ def denunciaFoto_intent(event):
     bucket_name = "denguefoto"
 
     # Verifica se a imagem existe no S3
-    # if not verifica_imagem_s3(bucket_name, nome_imagem):
-    #     return {
-    #         "sessionState": {
-    #             "dialogAction": {"type": "Close"},
-    #             "intent": {"name": current_intent, "state": "Failed"},
-    #         },
-    #         "messages": [
-    #             {
-    #                 "contentType": "PlainText",
-    #                 "content": f"A imagem '{nome_imagem}' não foi encontrada no sistema.",
-    #             },
-    #         ],
-    #     }
     if not verifica_imagem_s3(bucket_name, nome_imagem):
+        # Incrementa o contador de falhas
+        tentativas_falhas += 1
+
+        # Verifica se atingiu o limite de 3 falhas
+        if tentativas_falhas >= 3:
+            card_response = {
+                "contentType": "ImageResponseCard",
+                "imageResponseCard": {
+                    "title": "Como posso te ajudar?",
+                    "buttons": [
+                        {
+                            "text": "Reportar foco de dengue",
+                            "value": "Reportar foco de dengue",
+                        },
+                        {"text": "Verificar sintomas", "value": "Sintomas"},
+                        {"text": "Dicas de Prevenção", "value": "Prevenção"},
+                        {"text": "Dicas de tratamento", "value": "Tratamento"},
+                        {
+                            "text": "Informação para contato",
+                            "value": "Informação para contato",
+                        },
+                    ],
+                },
+            }
+
+            # Reinicia o contador de falhas
+            tentativas_falhas = 0
+            return {
+                "sessionState": {
+                    "dialogAction": {"type": "Close"},
+                    "intent": {"name": current_intent, "state": "Failed"},
+                },
+                "messages": [
+                    {
+                        "contentType": "PlainText",
+                        "content": "Parece que você está tendo problemas com o nosso chat. Vamos te ajudar.",
+                    },
+                    card_response,
+                ],
+            }
+
+        # Caso não tenha atingido o limite, solicita outra imagem com mensagem aleatória
         slots["nomeImagem"] = (
             None  # Limpa o slot nomeImagem para permitir uma nova tentativa
         )
+        mensagem_falha = random.choice(
+            mensagens_falha
+        )  # Seleciona uma mensagem aleatória
         return {
             "sessionState": {
                 "dialogAction": {"type": "ElicitSlot", "slotToElicit": "nomeImagem"},
@@ -72,7 +124,7 @@ def denunciaFoto_intent(event):
             "messages": [
                 {
                     "contentType": "PlainText",
-                    "content": f"A imagem não foi encontrada no sistema. Por favor, envie outra imagem.",
+                    "content": mensagem_falha,
                 },
             ],
         }
@@ -83,7 +135,7 @@ def denunciaFoto_intent(event):
             bucket_name, nome_imagem
         )
         if local_suspeito:
-            label_detectado = local_suspeito["Nome"]
+            label_detectado = local_suspeito["nome_traduzido"]
             print(f"Oi estou conferindo meu bug {label_detectado}")
 
             # Atualiza o slot label com o valor detectado
@@ -129,25 +181,19 @@ def denunciaFoto_intent(event):
         print(f"A minha resposta é: {resposta_confirmacao}")
 
         if resposta_confirmacao == "não":
-            slots["label"] = None  # apaga a label antiga (que estaria "errada")
-            slots["confirmacao"] = None  # evita loop eterno de uma mente sem lembranças
+            slots["label"] = None  # Apaga a label antiga
+            slots["confirmacao"] = None  # Evita loops desnecessários
 
-            # user preenche manualmente o valor do slot label
+            # Solicita ao usuário que preencha o slot label
             return {
                 "sessionState": {
-                    "dialogAction": {
-                        "type": "ElicitSlot",  # Solicita ao usuário para preencher o slot
-                        "slotToElicit": "label",  # Especifica qual slot será preenchido
-                    },
-                    "intent": {
-                        "name": current_intent,
-                        "slots": slots,  # Passa os slots para o estado da sessão-> label vazio
-                    },
+                    "dialogAction": {"type": "ElicitSlot", "slotToElicit": "label"},
+                    "intent": {"name": current_intent, "slots": slots},
                 },
                 "messages": [
                     {
                         "contentType": "PlainText",
-                        "content": "Por favor, descreva o que você identificou na imagem.",  # Mensagem para o usuário
+                        "content": "Por favor, descreva o que você identificou na imagem.",
                     },
                 ],
             }
@@ -169,7 +215,9 @@ def denunciaFoto_intent(event):
         print(f"Novo label definido pelo usuário: {novo_label}")
 
         try:
-            dicas_prevencao = obter_dicas_dengue_bedrock(novo_label)
+            # dicas_prevencao = obter_dicas_dengue_bedrock(novo_label) # fora do ar hehe
+            dicas_prevencao = obter_dica_aleatoria(novo_label)
+            # dicas_prevencao = obter_dicas_dengue_gpt(novo_label)
         except Exception as e:
             print(f"Erro ao obter dicas de prevenção: {str(e)}")
             dicas_prevencao = "Não foi possível obter dicas de prevenção no momento. BedRock está fora do ar"
