@@ -7,27 +7,43 @@ import uuid  # hash da imagem -> id único
 from stt import transcribe_audio  # Importando a função da API STT
 import json
 from tts import get_audio_url_from_tts  # Importar a função de TTS
+from dotenv import load_dotenv
+from config import Config
 
-app = Flask(__name__)  # A pasta 'templates' padrão será usada
+# Load environment variables
+load_dotenv()
+
+app = Flask(__name__)
+app.config.from_object(Config)
 socketio = SocketIO(app)
 
-# Configurações da AWS
-aws_region = "us-east-1"  # Altere conforme necessário
-s3_bucket = "projeto-final-grupo-2"
+# AWS Configuration with session token
+aws_config = {
+    "region_name": app.config['AWS_DEFAULT_REGION'],
+    "aws_access_key_id": app.config['AWS_ACCESS_KEY_ID'],
+    "aws_secret_access_key": app.config['AWS_SECRET_ACCESS_KEY']
+}
 
-# Inicialização dos clientes da AWS
-lex_client = boto3.client("lexv2-runtime", region_name=aws_region)
-s3_client = boto3.client("s3", region_name=aws_region)
+# Add session token if available
+if app.config.get('AWS_SESSION_TOKEN'):
+    aws_config['aws_session_token'] = app.config['AWS_SESSION_TOKEN']
+
+# Initialize AWS clients with credentials
+try:
+    lex_client = boto3.client("lexv2-runtime", **aws_config)
+    s3_client = boto3.client("s3", **aws_config)
+    transcribe_client = boto3.client("transcribe", **aws_config)
+except Exception as e:
+    print(f"Error initializing AWS clients: {str(e)}")
 
 # Variáveis do bot Lex V2 (alterar conforme necessário)
 bot_id = "KF1FJWESHS"
 bot_alias_id = "TSTALIASID"
 locale_id = "pt_BR"
 
-
 @app.route("/")
 def index():
-    return render_template("index.html")  # O template está na pasta 'templates'
+    return render_template("index.html")  # O template está na pasta 'templates' # O template está na pasta 'templates'
 
 
 @socketio.on("send_message")
