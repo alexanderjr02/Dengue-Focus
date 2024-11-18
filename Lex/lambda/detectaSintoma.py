@@ -23,11 +23,11 @@ def detectaSintoma_evento(event, sintoma):
             "messages": [
                 {
                     "contentType": "PlainText",
-                    "content": "Vejo que está com um dos sintomas da dengue, vamos fazer mais perguntas para avaliar sua situação.",
+                    "content": "Vejo que está com um dos sintomas da dengue, vamos fazer mais perguntas para avaliar sua situação."
                 },
                 {
                     "contentType": "PlainText",
-                    "content": f"Entendido, você mencionou {sintoma.replace('_', ' ')}. Vamos continuar com mais perguntas.",
+                    "content": f"Entendido, você mencionou {sintoma.replace('_', ' ')}. Vamos continuar com mais perguntas."
                 },
             ],
         }
@@ -40,15 +40,9 @@ def detectaSintoma_evento(event, sintoma):
         return {
             "sessionState": {
                 "dialogAction": {"type": "Close"},
-                "intent": {
-                    "name": event["sessionState"]["intent"]["name"],
-                    "state": "Failed",
-                },
+                "intent": {"name": event["sessionState"]["intent"]["name"], "state": "Failed"},
             },
             "messages": [
-                {
-                    "contentType": "PlainText",
-                    "content": "Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.",
-                },
+                {"contentType": "PlainText", "content": "Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde."},
             ],
         }
