@@ -2,9 +2,7 @@ import boto3
 import random
 from rekognition import detectar_locais_proliferacao
 from bedrock import obter_dicas_dengue_bedrock
-#from cohere_utils import obter_dicas_dengue_cohere
 from dicionarioDicas import obter_dica_aleatoria
-#from gpt import obter_dicas_dengue_gpt
 
 
 # Inicializa o cliente S3
@@ -15,11 +13,9 @@ tentativas_falhas = 0
 
 # Mensagens variadas para falhas
 mensagens_falha = [
-    "A imagem não foi encontrada no sistema. Por favor, tente novamente.",
-    "Parece que houve um problema com a imagem. Por favor, envie outra.",
-    "Não conseguimos localizar a imagem no sistema. Tente enviar novamente.",
-    "A imagem enviada não foi encontrada. Por favor, envie uma nova imagem.",
-    "Houve um erro ao processar a imagem. Por favor, tente outra.",
+    "Hmm, não consegui encontrar essa imagem aqui no meu sistema. Que tal tentar enviar novamente? 📸",
+    "Opa, parece que tivemos um probleminha com a imagem. Tenta outra vez, por favor. Estou na torcida para dar certo agora! 🚀",
+    "Não achei a imagem no sistema. Pode enviar novamente? Juntos somos mais fortes contra a dengue! 🌟"
 ]
 
 
@@ -55,7 +51,7 @@ def denunciaFoto_intent(event):
             "messages": [
                 {
                     "contentType": "PlainText",
-                    "content": "Por favor, envie a imagem que deseja verificar.",
+                    "content": "Pode me enviar a imagem que você quer analisar? Estou aqui para ajudar!",
                 },
             ],
         }
@@ -94,7 +90,7 @@ def denunciaFoto_intent(event):
                 "messages": [
                     {
                         "contentType": "PlainText",
-                        "content": "Parece que você está tendo problemas com o nosso chat. Vamos te ajudar.",
+                        "content": "Eu percebi que você está tendo dificuldades. Não se preocupe, sempre temos outras formas de contribuir com o combate à dengue! 🦟✨",
                     },
                     card_response,
                 ],
@@ -144,7 +140,7 @@ def denunciaFoto_intent(event):
                 "messages": [
                     {
                         "contentType": "PlainText",
-                        "content": f"Detectamos um possível '{label_detectado}' na imagem. Você confirma essa identificação?",
+                        "content": f"Detectei um possível foco em '{label_detectado}'. Você confirma que é isso mesmo?",
                     },
                 ],
             }
@@ -180,7 +176,7 @@ def denunciaFoto_intent(event):
                 "messages": [
                     {
                         "contentType": "PlainText",
-                        "content": "Por favor, descreva o que você identificou na imagem.",
+                        "content": "Sem problemas! Me conta o que você identificou para eu ajustar as informações. 😊",
                     },
                 ],
             }
@@ -198,7 +194,7 @@ def denunciaFoto_intent(event):
             }
         }
         print(f"Novo label definido pelo usuário: {novo_label}")
-
+    #dicas_prevencao = "Dicas de prevenção não disponíveis no momento."
         try:
             dicas_prevencao = obter_dicas_dengue_bedrock(novo_label) # fora do ar hehe
             #dicas_prevencao = obter_dica_aleatoria(novo_label)
@@ -209,11 +205,11 @@ def denunciaFoto_intent(event):
             dica3 = '3 - ' + dicas[1].split('3. ')[1].strip() if len(dicas[1].split('3. ')) > 1 else ''
         except Exception as e:
             print(f"Erro ao obter dicas de prevenção: {str(e)}")
-            dicas_prevencao = "Não foi possível obter dicas de prevenção no momento. BedRock está fora do ar"
+            dicas_prevencao = "Ops, não consegui acessar as dicas de prevenção no momento. Mesmo assim, siga cuidando dos focos de água parada e conte comigo para mais dúvidas! 🦟💧"
 
         # Mensagem final
         mensagem_risco = (
-            "Locais suspeitos de proliferação de dengue foram identificados."
+            "Encontramos locais suspeitos de proliferação de dengue. Aqui vão algumas dicas importantes para combater os focos:"
         )
         return {
             "sessionState": {
@@ -225,7 +221,7 @@ def denunciaFoto_intent(event):
                 {"contentType": "PlainText", "content": dica1},
                 {"contentType": "PlainText", "content": dica2},
                 {"contentType": "PlainText", "content": dica3},
-                {"contentType": "PlainText", "content": "Obrigado por usar o DengueBot. Se precisar de algo mais, é só falar."}
+                {"contentType": "PlainText", "content": "Muito obrigado por usar o DengueBot! Se precisar de mais ajuda, é só me chamar. Juntos podemos vencer a dengue! Caso precise de mais informações, vá para Contatos"}
             ],
         }
 
@@ -238,7 +234,7 @@ def denunciaFoto_intent(event):
         "messages": [
             {
                 "contentType": "PlainText",
-                "content": "Ainda precisamos que você confirme ou preencha o rótulo da imagem.",
+                "content": "Parece que precisamos ajustar algumas informações antes de continuar. Pode me ajudar preenchendo o rótulo da imagem?",
             },
         ],
     }
