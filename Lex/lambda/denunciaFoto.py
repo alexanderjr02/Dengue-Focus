@@ -215,9 +215,17 @@ def denunciaFoto_intent(event):
         print(f"Novo label definido pelo usuário: {novo_label}")
 
         try:
-            # dicas_prevencao = obter_dicas_dengue_bedrock(novo_label) # fora do ar hehe
-            dicas_prevencao = obter_dica_aleatoria(novo_label)
+            dicas_prevencao = obter_dicas_dengue_bedrock(novo_label)  # fora do ar hehe
+            # dicas_prevencao = obter_dica_aleatoria(novo_label)
             # dicas_prevencao = obter_dicas_dengue_gpt(novo_label)
+            dicas = dicas_prevencao.split("2. ")
+            dica1 = "1 - " + dicas[0].replace("1. ", "").strip()
+            dica2 = "2 - " + dicas[1].split("3. ")[0].strip() if len(dicas) > 1 else ""
+            dica3 = (
+                "3 - " + dicas[1].split("3. ")[1].strip()
+                if len(dicas[1].split("3. ")) > 1
+                else ""
+            )
         except Exception as e:
             print(f"Erro ao obter dicas de prevenção: {str(e)}")
             dicas_prevencao = "Não foi possível obter dicas de prevenção no momento. BedRock está fora do ar"
@@ -233,7 +241,13 @@ def denunciaFoto_intent(event):
             },
             "messages": [
                 {"contentType": "PlainText", "content": mensagem_risco},
-                {"contentType": "PlainText", "content": dicas_prevencao},
+                {"contentType": "PlainText", "content": dica1},
+                {"contentType": "PlainText", "content": dica2},
+                {"contentType": "PlainText", "content": dica3},
+                {
+                    "contentType": "PlainText",
+                    "content": "Obrigado por usar o DengueBot. Se precisar de algo mais, é só falar.",
+                },
             ],
         }
 
