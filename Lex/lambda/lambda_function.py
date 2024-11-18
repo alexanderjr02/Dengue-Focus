@@ -3,6 +3,7 @@ from saudacoes import saudacoes_intent
 from denunciaFoto import denunciaFoto_intent
 from dicasTratamento import dicasTratamento_intent
 from contato import contato_intent
+from dicasPrevencao import dicasPrevencao_intent
 
 
 def lambda_handler(event, context):
@@ -27,6 +28,10 @@ def lambda_handler(event, context):
 
     elif current_intent == "ContatoIntent":
         response = contato_intent(event)
+
+    elif current_intent == "DicasPrevencaoIntent":
+        response = dicasPrevencao_intent(event)
+
     else:
         lex_message = "Desculpe, não entendi o que você disse."
         mensagem = f"{lex_message}"
