@@ -15,6 +15,7 @@ def detectar_locais_proliferacao(bucket, nome_imagem):
     locais_suspeitos = [
         "pool", "trash", "drink", "tire", "water container", "puddle",
         "open container", "bottle", "water bucket", "flower pot", "can",
+        "pond", "water", "beer", "tub", "potted plant", "plant", "planter"
     ]
 
     locais_detectados = []
@@ -31,4 +32,3 @@ def detectar_locais_proliferacao(bucket, nome_imagem):
     
     print(f"Respostas do Rekognition: {resposta_labels}")
     return locais_detectados, local_suspeito
-
