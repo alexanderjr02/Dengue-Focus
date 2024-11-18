@@ -21,7 +21,7 @@ dicas_dengue_dentro = [
     "Evite deixar brinquedos ou utensílios que acumulem água no quintal.",
     "Use roupas que cubram a maior parte do corpo em áreas com muitos mosquitos.",
     "Inspecione sua residência semanalmente em busca de focos de água parada.",
-    "Evite armazenar água em baldes ou recipientes descobertos.",
+    "Evite armazenar água em baldes ou recipientes descobertos."
 ]
 
 dicas_dengue_fora = [
@@ -34,37 +34,33 @@ dicas_dengue_fora = [
     "Não acumule folhas ou entulhos que possam reter água.",
     "Realize mutirões comunitários de limpeza com frequência.",
     "Coloque telas protetoras em caixas de esgoto e fossas sépticas.",
-    "Esteja atento a campanhas locais de combate à dengue e participe delas.",
+    "Esteja atento a campanhas locais de combate à dengue e participe delas."
 ]
-
 
 def dicasPrevencao_intent(event):
     # Seleciona 2 dicas de dentro de casa e 2 dicas de fora de casa
     dicas_dentro = random.sample(dicas_dengue_dentro, 2)
     dicas_fora = random.sample(dicas_dengue_fora, 2)
-
+    
     # Junta as dicas selecionadas
     dicas_selecionadas = dicas_dentro + dicas_fora
-
+    
     # Embaralha a lista de dicas selecionadas para garantir a aleatoriedade
     random.shuffle(dicas_selecionadas)
-
+    
     # Constrói mensagens de dicas
-    message_intro = "Aqui estão algumas dicas de prevenção contra a dengue para que voce possa se proteger tanto dentro, quanto fora de casa:\n\n"
+    message_intro = "Tenho algumas dicas que podem fazer a diferença para proteger sua casa e sua comunidade:\n\n"
     message1 = f"1. {dicas_selecionadas[0]}\n\n"
     message2 = f"2. {dicas_selecionadas[1]}\n\n"
     message3 = f"3. {dicas_selecionadas[2]}\n\n"
     message4 = f"4. {dicas_selecionadas[3]}\n\n"
-    message_final = "Se você tiver mais dúvidas ou precisar de mais informações, não hesite em entrar em contato novamente. Estamos aqui para ajudar!"
+    message_final = "E aí, que tal começar a aplicar essas dicas hoje mesmo? Se precisar de mais informações ou quiser saber mais sobre como ajudar no combate à dengue, é só me chamar. Estamos juntos nessa missão!"
 
     # Estrutura de resposta para o Lex já com os áudios para cada mensagem
     response = {
         "sessionState": {
             "dialogAction": {"type": "Close"},
-            "intent": {
-                "name": event["sessionState"]["intent"]["name"],
-                "state": "Fulfilled",
-            },
+            "intent": {"name": event["sessionState"]["intent"]["name"], "state": "Fulfilled"},
         },
         "messages": [
             {"contentType": "PlainText", "content": message_intro},
