@@ -3,4 +3,4 @@ flask-socketio
 boto3
 requests
 eventlet
-python-dotenv
+python-dotenv 
