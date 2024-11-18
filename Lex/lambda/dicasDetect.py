@@ -17,9 +17,7 @@ def dicasDetect_intent(event):
     # Construção da resposta
     response = {
         "sessionState": {
-            "dialogAction": {
-                "type": "ElicitIntent"
-            },  # Espera uma nova intent baseada na escolha
+            "dialogAction": {"type": "ElicitIntent"},  # Espera uma nova intent baseada na escolha
             "intent": {"name": "DicasDectectIntent", "state": "InProgress"},
         },
         "messages": [
