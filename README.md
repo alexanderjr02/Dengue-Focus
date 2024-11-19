@@ -75,6 +75,95 @@ Nossa aplicação foi desenvolvida em parceria com a Secretaria de Saúde, mais 
 
 ![Arquitetura_da Aplicacao](https://github.com/user-attachments/assets/a55899d8-510c-4ecc-87f0-611aecf00d00)
 
+## 📂 Estrutura do Projeto
+### Estrutura de Diretórios: 
+
+```
+Sprints-9-10-PB-AWS-JUNHO/
+├── Lex/
+│    ├── Bot_Final/                      
+│    │      ├── DengueBot_FINAL.zip       # Versão final do bot para upload no AWS Lex.
+│    │      ├── DengueBot_v7.zip          # Iteração final do bot no AWS Lex.
+│    │      └── Lambda_Final.zip          # Funções Lambda necessárias para o bot.
+│    ├── Layers/
+│    │      └── Lib-Requests.zip          # Biblioteca Requests empacotada como layer para Lambda.
+│    ├── Lex_Antigos/
+│    │      └── ...                       # Arquivos de versões anteriores do Lex.
+│    ├── lambda/
+│    │      ├── bedrock.py                # Interage com o Bedrock para gerar respostas.
+│    │      ├── contato.py                # Gera respostas relacionadas a contato.
+│    │      ├── denunciaFoto.py           # Analisa possiveis focos de dengue imagens enviadas através do chatbot.
+│    │      ├── detectaSintomas.py        # Identifica sintomas relatados pelos usuários.
+│    │      ├── dicasDetect.py            # Identifica o sintoma indicado pelo usuário e o captura em um slot para a intent infereSintomas
+│    │      ├── dicasPrevencao.py         # Retorna dicas de prevenção relacionadas à dengue.
+│    │      ├── dicasTratamento.py        # Sugere tratamentos gerais para a dengue.
+│    │      ├── dicionarioDicas.py        # Contém um dicionário com dicas pré-definidas.
+│    │      ├── infereSintomas.py         # Faz inferências com base nos sintomas relatados.
+│    │      ├── lambda_function.py        # Função Lambda principal para execução no AWS.
+│    │      ├── rekognition.py            # Processa imagens usando Amazon Rekognition.
+│    │      └── saudacoes.py              # Responde com saudações iniciais.
+│    └── README.md                        # Documentação sobre os recursos do AWS Lex.
+├── analysis/                           
+│    ├── data/
+│    │      └── ...                       # Dados usados para análises do projeto.
+│    ├── sagemaker/ 
+│    │      ├── prever_casos_train.py     # Script para treinar modelo preditivo no SageMaker.
+│    │      └── sagemaker_prever_sintomas.ipynb  # Notebook para prever sintomas no SageMaker.
+│    │
+│    └── modelo_prever_sintomas.ipynb     # Notebook para análise e modelagem de sintomas.
+├── apis/
+│    ├── templates/
+│    │      └── index.html                # Template HTML para endpoints da API.
+│    ├── .dockerignore                    # Ignora arquivos desnecessários ao construir a imagem Docker.
+│    ├── README.md                        # Documentação da API.
+│    ├── api_symptoms.py                  # API para processar sintomas e enviar respostas.
+│    ├── dockerfile                       # Configuração do container Docker da API.
+│    └── requirements.txt                 # Dependências da API.
+├── app/
+│    ├── static/
+│    │     ├── css/
+│    │     │    ├── chat.css              # Estilo para a interface de chat.
+│    │     │    ├── header.css            # Estilo para o cabeçalho da página.
+│    │     │    ├── home.css              # Estilo para a página inicial.
+│    │     │    ├── resultado-esperado.css  # Estilo para resultados esperados.
+│    │     │    └── style.css             # Estilos gerais da aplicação.
+│    │     ├── image/
+│    │     │    ├── logocompass.webp      # Logo da Compass utilizado no projeto.
+│    │     │    └── logoestacio.webp      # Logo da Estácio utilizado no projeto.
+│    │     └── js/
+│    │          ├── input.js              # Processa entradas do usuário.
+│    │          ├── playAudio.js          # Controla reprodução de áudios.
+│    │          ├── script.js             # Script principal para lógica da página.
+│    │          ├── sendAudio.js          # Envia áudios via API.
+│    │          ├── sendImage.js          # Envia imagens via API.
+│    │          └── sendMessage.js        # Envia mensagens de texto via API.
+│    │
+│    ├── templates/
+│    │     └── index.html                 # Template da página inicial.
+│    ├── README.md                        # Documentação do app web.
+│    ├── app.py                           # Script principal da aplicação web.
+│    ├── config.py                        # Configurações gerais da aplicação.
+│    ├── requirements.txt                 # Dependências da aplicação web.
+│    ├── stt.py                           # Processa conversão de fala para texto.
+│    └── tts.py                           # Converte texto em fala.
+├── assets/
+│    ├── images/
+│    │     ├── Arquitetura_Aplicacao.jpg  # Diagrama da arquitetura final da aplicação.
+│    │     ├── banner_denguebot.jpg       # Banner promocional do DengueBot.
+│    │     └── esboco_arquitetura_inicial.png  # Rascunho da arquitetura inicial.
+│    └── videos/
+│          └── DengueGif.gif              # GIF ilustrativo sobre o DengueBot.
+├── docs/
+│    ├── proposta-cliente/
+│    │     └── proposta_cliente.pdf       # Proposta do projeto enviada ao cliente.
+│    └── proposta_projeto_final.pdf       # Proposta protótipo documentada do projeto.
+├── .dockerignore                         # Ignora arquivos específicos ao criar imagens Docker.
+├── .gitignore                            # Lista de arquivos e pastas ignorados pelo Git.
+├── README.md                             # Documentação principal do repositório.
+└── dockerfile                            # Configuração principal para a imagem Docker.
+```
+
+
 ## 😵‍💫 Dificuldades Encontradas
 
 - **Complexidade na Engenharia de Prompt**: A manipulação de labels, parâmetros e prompts no Amazon Bedrock exigiu um conhecimento mais avançado em engenharia de prompt. Isso foi essencial para gerar conteúdo adequado e útil, e demandou inúmeras iterações até encontrar o formato ideal. Testamos diferentes formas de estruturação dos prompts e ajustamos os parâmetros até que as respostas geradas fossem mais amigáveis e fáceis de ler. <br>
