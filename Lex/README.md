@@ -56,9 +56,9 @@ Para que seja possível realizar a configuração do seu ambiente AWS será nece
 
 4. **Acesso ao Amazon Bedrock:** Na página do [Amazon Bedrock](https://console.aws.amazon.com/bedrock/), [solicite acesso ao modelo Titan](https://docs.aws.amazon.com/pt_br/bedrock/latest/userguide/getting-started.html) da Amazon.
 
-5. **Preparação dos arquivos:** No repositório do GitHub, salve os arquivos [Lambda_Final.zip](./Lex/Bot_Final/Lambda_Final.zip), [DengueBot_Final.zip](./Lex/Bot_Final/DengueBot_Final.zip) e [Lib-Requests.zip](./Lex/Layers/Lib-Requests.zip) em sua máquina.
+5. **Preparação dos arquivos:** No repositório do GitHub, salve os arquivos [Lambda_Final.zip](./Bot_Final/Lambda_Final.zip), [DengueBot_Final.zip](./Lex/Bot_Final/DengueBot_Final.zip) e [Lib-Requests.zip](./Lex/Layers/Lib-Requests.zip) em sua máquina.
 
-6. **Configuração da função Lambda:** No console do Lambda, [crie uma nova função](https://docs.aws.amazon.com/pt_br/lambda/latest/dg/configuration-function-zip.html). Selecione Python 3.12 no campo de Tempo de Execução e faça o upload do arquivo [Lambda_Final.zip](./Lex/Bot_Final/Lambda_Final.zip) para que a função esteja disponível.
+6. **Configuração da função Lambda:** No console do Lambda, [crie uma nova função](https://docs.aws.amazon.com/pt_br/lambda/latest/dg/configuration-function-zip.html). Selecione Python 3.12 no campo de Tempo de Execução e faça o upload do arquivo [Lambda_Final.zip](./Bot_Final/Lambda_Final.zip) para que a função esteja disponível.
 
 7. **Ajuste do código Lambda:** Na aba *Código* da função Lambda, localize a linha 64 do arquivo `denunciaFoto.py` e altere o nome da variável `bucket_name` para o nome do bucket criado no passo 2, responsável pelo armazenamento das imagens:
 
@@ -74,7 +74,7 @@ Para que seja possível realizar a configuração do seu ambiente AWS será nece
 14. **Criação da versão do bot**: Na barra lateral esquerda, acesse _Bot Versions_ e crie uma nova versão do bot que você acabou de compilar.
 15. **Configuração de Alias**: Acesse _Deployment > Aliases_, clique em _Criar Alias_, escolha um nome e selecione a versão do bot criada no passo anterior. Em seguida, clique em _Criar_.
 16. **Configuração de idioma e Lambda do bot**: Após a criação do alias, clique nele. Em _Languages_, selecione _Português (Brazil)_. Na janela _Lambda Function_, escolha a função Lambda criada no passo 6 e clique em _Salvar_.
-17. **Registro de ID**: Anote o número do ID do Alias e também o ID do Bot, pois ambos serão necessários no arquivo [app.py](/app/app.py) que está no diretório do projeto.
+17. **Registro de ID**: Anote o número do ID do Alias e também o ID do Bot, pois ambos serão necessários no arquivo [app.py](../app.py) que está no diretório do projeto.
 
 ## Observações 
 
