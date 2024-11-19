@@ -1,4 +1,5 @@
-## <img src="../sprints-9-10-pb-aws-junho/assets/images/banner_denguebot.jpg" alt="Banner descritivo sobre o projeto" width="1250"/><br>
+![banner_denguebot](https://github.com/user-attachments/assets/6683707b-dafc-43d4-b498-14879a4cfea3)
+
 # <p align="center">Dengue Focus: Chatbot de Apoio no Combate e Prevenção de Focos de Dengue
 
 <p align="center">
@@ -36,8 +37,8 @@ Nossa aplicação foi desenvolvida em parceria com a Secretaria de Saúde, mais 
 - Instruções de Contato Com Autoridades: Oferece formas de contato com autoridades locais para o controle e prevenção de casos de dengue.
 
 ## 👀 Preview da Aplicação
+![Gif da aplicação DengueBot](https://github.com/user-attachments/assets/df937324-45af-41ae-bac1-c2db0dd5605c)
 
-<img src="../sprints-9-10-pb-aws-junho/assets/videos/DengueGif.gif" alt="preview da aplicação" width="1250"/>
 
 ## ⚙️ Tecnologias Utilizadas
 
@@ -66,7 +67,7 @@ Nossa aplicação foi desenvolvida em parceria com a Secretaria de Saúde, mais 
 
 ## 🏗️ Arquitetura da Aplicação
 
-<img src="../sprints-9-10-pb-aws-junho/assets/images/Arquitetura_Aplicacao.jpg" alt="Arquitetura da aplicação" width="700"/>
+![Arquitetura_da Aplicacao](https://github.com/user-attachments/assets/a55899d8-510c-4ecc-87f0-611aecf00d00)
 
 ## 😵‍💫 Dificuldades Encontradas
 
