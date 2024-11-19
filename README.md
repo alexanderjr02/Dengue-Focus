@@ -64,6 +64,12 @@ Nossa aplicação foi desenvolvida em parceria com a Secretaria de Saúde, mais 
 - **DynamoDB**: Um banco de dados NoSQL usado para armazenar as referências dos áudios gerados, como o hash único da frase e o link do áudio. Isso permite verificar se um áudio já foi criado anteriormente.
 - **AWS SageMaker**: Foi usado nesse projeto para treinar um modelo de machine learning que realiza diagnósticos iniciais da dengue com base nos sintomas relatados pelos usuários. 
 
+## 🛠 Como Abrir e Executar Esse Projeto
+
+  Para executar essa aplicação, acesse a [documentação de configurações de ambiente da AWS](./Lex/README.md) para configurar o seu ambiente cloud, e acesse a [documentação de configuração do ambiente local](./app/README.md) para rodar a aplicação localmente. <br>
+
+**É importante a realização dos passos conforme a documentação para que sua aplicação funcione corretamente**.
+
 ## 🏗️ Arquitetura da Aplicação
 
 <img src="../sprints-9-10-pb-aws-junho/assets/images/Arquitetura_Aplicacao.jpg" alt="Arquitetura da aplicação" width="700"/>
