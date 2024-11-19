@@ -6,6 +6,7 @@ Este projeto implementa uma API de machine learning que prevê a probabilidade d
 
 src/ analisys/ data/ predict/ api_symptoms.py # Main Flask API application Dockerfile # Docker configuration requirements.txt # Python dependencies
 
+
 ## Implementação da API
 
 O arquivo `api_symptoms.py` é baseado:
@@ -32,9 +33,9 @@ EXPOSE 5000
 CMD ["python", "api_symptoms.py"]
 ```
 
-2 - Crie a imagem docker:
+2.  Crie a imagem docker:
 
-docker build -t dengue-symptoms-api .
+`docker build -t dengue-symptoms-api .`
 
 # AWS Deployment
 
@@ -108,15 +109,15 @@ rota para testar a inferência: http://18.212.236.202:5000/predict_symptoms
 
 ## Desenvolvimento local
 
-1 - Instalar dependências:
+1. Instalar dependências:
 
-pip install -r requirements.txt
+`pip install -r requirements.txt`
 
-2 - Executar localmente:
+2. Executar localmente:
 
-python api_symptoms.py
+`python api_symptoms.py`
 
-A API estará disponível em http://localhost:5000
+A API estará disponível em *http://localhost:5000*
 
 #### Notas de segurança:
 
@@ -126,6 +127,14 @@ A API estará disponível em http://localhost:5000
 - Usar o AWS Secrets Manager para dados confidenciais
 
 ## Tecnologias Utilizadas
+
+![Amazon S3](https://img.shields.io/badge/Amazon_S3-orange?logo=amazonaws&logoColor=white)
+![Amazon CloudWatch](https://img.shields.io/badge/Amazon_CloudWatch-FF4F8B?logo=amazonaws&logoColor=white)
+![Python 3.12](https://img.shields.io/badge/Python_3.12-3776AB?logo=python&logoColor=white)
+![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
+![Amazon SageMaker](https://img.shields.io/badge/Amazon_SageMaker-232F3E?logo=amazonaws&logoColor=white)
+
 
 - **Amazon S3**: Armazenamento do treinamento.
 - **Amazon CloudWatch**: Monitoramento e logs da API.
