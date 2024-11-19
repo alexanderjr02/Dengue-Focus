@@ -1,5 +1,6 @@
 from flask import Flask, render_template, session
 from flask_socketio import SocketIO, join_room, emit
+from flask_session import Session
 import boto3
 import base64
 import os
@@ -9,11 +10,21 @@ import json
 from tts import get_audio_url_from_tts
 from dotenv import load_dotenv
 from config import Config
+import redis
+
+# Configuração do Redis para gerenciar sessões
+app = Flask(__name__)
+app.config["SESSION_TYPE"] = "redis"
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_USE_SIGNER"] = True
+app.config["SESSION_KEY_PREFIX"] = "chatbot:"
+app.config["SESSION_REDIS"] = redis.StrictRedis(host="localhost", port=6379, db=0)
+
+Session(app)
 
 # Load environment variables
 load_dotenv()
 
-app = Flask(__name__)
 app.config["SECRET_KEY"] = os.urandom(24)
 app.config.from_object(Config)
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -51,19 +62,16 @@ def index():
 @socketio.on("connect")
 def handle_connect(auth=None):
     if "sessionId" not in session:
-        session["sessionId"] = str(uuid.uuid4())
+        session["sessionId"] = str(uuid.uuid4())  # Gera um UUID único
     current_session = session["sessionId"]
     join_room(current_session)
     emit("connected", {"sessionId": current_session}, room=current_session)
-    return True
 
 
 @socketio.on("send_message")
 def handle_message(data):
     user_message = data["message"]
-    current_session = session.get(
-        "sessionId"
-    )  # Sempre buscar o sessionId da sessão atual
+    current_session = session.get("sessionId")
 
     try:
         response = lex_client.recognize_text(
@@ -96,11 +104,19 @@ def handle_message(data):
 
     except Exception as e:
         error_message = str(e)
-        socketio.emit(
-            "receive_message",
-            {"message": f"Erro ao se comunicar com o bot: {error_message}"},
-            room=current_session,
-        )
+        if "Invalid session" in error_message:
+            session["sessionId"] = str(uuid.uuid4())  # Reinicia a sessão
+            socketio.emit(
+                "receive_message",
+                {"message": "Sua sessão foi reiniciada. Tente novamente."},
+                room=current_session,
+            )
+        else:
+            socketio.emit(
+                "receive_message",
+                {"message": f"Erro ao se comunicar com o bot: {error_message}"},
+                room=current_session,
+            )
 
 
 def handle_fallback(current_session):
@@ -136,8 +152,7 @@ def handle_audio(data):
             Bucket=s3_bucket_name, Key=audio_file_name, Body=audio_bytes
         )
 
-        audio_content_base64 = base64.b64encode(audio_bytes).decode("utf-8")
-        transcription_result = transcribe_audio(audio_content_base64)
+        transcription_result = transcribe_audio(audio_bytes)
         transcript_text = json.loads(transcription_result["body"])["transcript"]
 
         response = lex_client.recognize_text(
@@ -188,7 +203,7 @@ def handle_image(data):
             Bucket=s3_bucket_name, Key=image_file_name, Body=image_bytes
         )
 
-        lex_response = lex_client.recognize_text(
+        response = lex_client.recognize_text(
             botId=bot_id,
             botAliasId=bot_alias_id,
             localeId=locale_id,
@@ -196,8 +211,8 @@ def handle_image(data):
             text=image_file_name,
         )
 
-        if "messages" in lex_response and lex_response["messages"]:
-            for msg in lex_response["messages"]:
+        if "messages" in response and response["messages"]:
+            for msg in response["messages"]:
                 if "content" in msg:
                     socketio.emit(
                         "receive_message",
@@ -222,7 +237,6 @@ def handle_image(data):
             {"message": f"Erro ao processar imagem: {error_message}"},
             room=current_session,
         )
-        print(f"Erro: {error_message}")
 
 
 if __name__ == "__main__":

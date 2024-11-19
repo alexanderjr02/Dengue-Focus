@@ -4,3 +4,5 @@ boto3
 requests
 eventlet
 python-dotenv
+flask-session
+redis
