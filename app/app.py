@@ -43,12 +43,6 @@ bot_alias_id = "TSTALIASID"
 locale_id = "pt_BR"
 
 
-@app.before_request
-def ensure_session_id():
-    if "sessionId" not in session:
-        session["sessionId"] = str(uuid.uuid4())
-
-
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -60,13 +54,16 @@ def handle_connect(auth=None):
         session["sessionId"] = str(uuid.uuid4())
     current_session = session["sessionId"]
     join_room(current_session)
+    emit("connected", {"sessionId": current_session}, room=current_session)
     return True
 
 
 @socketio.on("send_message")
 def handle_message(data):
     user_message = data["message"]
-    current_session = session.get("sessionId")
+    current_session = session.get(
+        "sessionId"
+    )  # Sempre buscar o sessionId da sessão atual
 
     try:
         response = lex_client.recognize_text(
@@ -79,11 +76,7 @@ def handle_message(data):
 
         if "messages" in response and response["messages"]:
             for msg in response["messages"]:
-                if (
-                    msg.get("contentType") == "PlainText"
-                    and "content" in msg
-                    and msg["content"]
-                ):
+                if msg.get("contentType") == "PlainText" and msg.get("content"):
                     audio_url = get_audio_url_from_tts(msg["content"])
                     socketio.emit(
                         "receive_message",
@@ -98,15 +91,6 @@ def handle_message(data):
                         {"title": card["title"], "buttons": buttons},
                         room=current_session,
                     )
-                else:
-                    # Handle empty content field
-                    socketio.emit(
-                        "receive_message",
-                        {
-                            "message": "Desculpe, houve um problema ao processar sua mensagem. Tente novamente."
-                        },
-                        room=current_session,
-                    )
         else:
             handle_fallback(current_session)
 
@@ -117,7 +101,6 @@ def handle_message(data):
             {"message": f"Erro ao se comunicar com o bot: {error_message}"},
             room=current_session,
         )
-        print(f"Erro: {error_message}")
 
 
 def handle_fallback(current_session):
