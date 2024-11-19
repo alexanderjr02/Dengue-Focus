@@ -65,7 +65,7 @@ Antes de executar a aplicação, verifique se os seguintes requisitos estão ins
 
 - Python 3.x: A aplicação foi desenvolvida em Python, então você precisará do Python instalado em sua máquina.
 - Pip: O gerenciador de pacotes do Python para instalar as dependências do projeto.
-- Conta AWS: A aplicação utiliza serviços da AWS (Lex, Polly, Rekognition, S3), então você precisa configurar suas credenciais AWS.
+- Conta AWS: A aplicação utiliza serviços da AWS. Acesse a [documentação de configurações de ambiente da AWS](Lex\README.md) para configurar seu ambiente cloud.
 
 ### Passos para executar a aplicação
 **1. Clone o repositório**: <br>
