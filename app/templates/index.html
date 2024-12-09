@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
+    <!-- Link CSS sem url -->
+    <link rel="stylesheet" href="/app/static/css/style.css">
+    <link rel="stylesheet" href="/app/static/css/header.css">
+    <link rel="stylesheet" href="/app/static/css/chat.css">
+    <link rel="stylesheet" href="/app/static/css/home.css">
+    <link rel="stylesheet" href="/app/static/css/resultado-esperado.css">
+
     <!-- Link CSS usando url_for -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
@@ -51,10 +58,10 @@
                     </svg>
                 </button>
             </div>
-            <div class="complemento-inicio">
+            <!--<div class="complemento-inicio">
                 <img class="text" src="{{ url_for('static', filename='image/logocompass.webp') }}" alt="Logo Compass">
                 <img class="qr-code" src="{{ url_for('static', filename='image/logoestacio.webp') }}" alt="QR Code">
-            </div>
+            </div>-->
         </div>
     </main>
 
@@ -178,6 +185,13 @@
     <script src="{{ url_for('static', filename='js/playAudio.js') }}"></script> 
     <script src="{{ url_for('static', filename='js/sendMessage.js') }}"></script> 
 
+    <!-- JavaScript customizado sem url-->
+
+    <script src="/app/static/js/input.js"></script>
+    <script src="/app/static/js/sendAudio.js"></script>
+    <script src="/app/static/js/sendImage.js"></script>
+    <script src="/app/static/js/sendMessage.js"></script>
+    <script src="/app/static/js/script.js"></script>
 
 </body>
 </html>
